@@ -87,5 +87,9 @@
     (옆에 작성된 값을 이용해서 src 속성 추가)
   -->
     <img th:src="#{user.default.image}" alt="고양이" width="500vw">
+    
+    <!-- html 파일 전체를 하나의 조각으로 취급 -->
+  <th:block th:replace="~{fragments/footer}"></th:block>
+
 </body>
 </html>
