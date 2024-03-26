@@ -119,5 +119,10 @@ public class TodoServiceImpl implements TodoService{
 	public int getCompleteCount() {
 		return mapper.getCompleteCount();
 	}
-	
+
+	// 할일 목록 조회
+	@Override
+	public List<Todo> selectList() {
+		return mapper.selectAll();
+	}
 }
