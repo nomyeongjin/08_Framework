@@ -26,35 +26,63 @@
             <section class="content-2">
                 <!-- 로그인, 회원가입 버튼 -->
 
-                <!-- 로그인 박스 -->
-                <form action="/member/login" method="POST" id="loginForm">
-                    <fieldset class="id-pw-area">
-                        <!-- 아이디/비밀번호 입력 -->
-                        <section>
-                            <input type="text" name="memberEmail" placeholder="이메일">
-                            <input type="password" name="memberPw" placeholder="비밀번호">
-                        </section>
-
-                        <!-- 로그인 버튼 -->
-                        <section>
-                            <button>로그인</button>
-                        </section>
-                    </fieldset>
-
-                    <!-- label : input 태그의 제목을 나타내는 태그-->
-                    <label>
-                        <input type="checkbox" name="saveId">
-                        아이디 저장
-                    </label>
-                    
-                    <article class="signup-fond-area">
-                        <a href="#">회원가입</a>
-                        |
-                        <a href="#">아이디/비밀번호 찾기</a>
+                <!-- 로그인이 되어있지 않은 경우 -->
+                <th:block th:if="${session.loginMember==null}">
+                    <!-- 로그인 박스 -->
+                    <form action="/member/login" method="POST" id="loginForm">
+                        <fieldset class="id-pw-area">
+                            <!-- 아이디/비밀번호 입력 -->
+                            <section>
+                                <input type="text" name="memberEmail" placeholder="이메일">
+                                <input type="password" name="memberPw" placeholder="비밀번호">
+                            </section>
+    
+                            <!-- 로그인 버튼 -->
+                            <section>
+                                <button id="loginBtn">로그인</button>
+                            </section>
+                        </fieldset>
+    
+                        <!-- label : input 태그의 제목을 나타내는 태그-->
+                        <label>
+                            <input type="checkbox" name="saveId">
+                            아이디 저장
+                        </label>
                         
+                        <article class="signup-fond-area">
+                            <a href="/member/signup">회원가입</a>
+                            |
+                            <a href="#">아이디/비밀번호 찾기</a>
+                            
+                        </article>
+    
+                    </form>
+                </th:block>
+
+                <!-- 로그인이 되어 있을 경우 -->
+                <!-- <th:block th:unless="${session.loginMember==null}"> -->
+                <th:block th:if="${session.loginMember!=null}">
+
+                    <article class="login-area">
+
+                        <a href="#">
+                            <!-- 프로필 이미지 -->
+                            <img th:src="#{user.default.image}" id="memberProfile" alt="프로필 이미지 없음">
+                        </a>
+
+                        <!-- 닉네임, 이메일, 로그아웃 버튼 -->
+                        <div class="my-info" th:object="${session.loginMember}">
+                            <div>
+                                <a href="#" id="nickname" th:text="*{memberNickname}"></a>
+                                <a href="/member/logout" id="logoutBtn">로그아웃</a>
+                            </div>
+                            <p th:text="*{memberEmail}">이메일</p>
+                        </div>
+
                     </article>
 
-                </form>
+                </th:block>
+
             </section>
 
         </section>
@@ -63,6 +91,8 @@
 
     <!-- common/footer.html 추가 -->
     <th:block th:replace="~{common/footer}"></th:block>
+
+    <script src="/js/main.js"></script>
 
 </body>
 </html>

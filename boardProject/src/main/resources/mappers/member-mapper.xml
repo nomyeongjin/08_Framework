@@ -8,8 +8,8 @@
 	 
 	 <!-- parameterType 속성은 필수가 아니다
 	 	why? TypeHandler를 이용해서 자료형을 판별할 수 있음
-	 	()
-	  -->
+	 	(https://mybatis.org/mybatis-3/sqlmap-xml.html)
+	 -->
 	 
 	
 	<!-- 로그인 -->
@@ -21,5 +21,25 @@
 		WHERE MEMBER_EMAIL = #{memberEmail}
 		AND MEMBER_DEL_FL = 'N'
 	</select>
+	
+	<!-- 회원가입 -->
+	<!-- parameterType="Member" 생략 가능!! -->
+ 	<!-- insert/update/delete 결과가 모두 행의 개수(int)  
+ 		 resultType 작성 X -->
+ 		
+	<insert id="signup" >
+		INSERT INTO "MEMBER"
+		VALUES(SEQ_MEMBER_NO.NEXTVAL, 
+			 #{memberEmail},
+			 #{memberPw},
+			 #{memberNickname},
+			 #{memberTel},
+			 #{memberAddress},
+			 NULL,
+			 DEFAULT,
+			 DEFAULT,
+			 DEFAULT
+		)
+	</insert>
 	
 </mapper>
