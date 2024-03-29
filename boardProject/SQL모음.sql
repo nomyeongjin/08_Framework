@@ -44,7 +44,7 @@ CREATE SEQUENCE SEQ_MEMBER_NO NOCACHE;
 -- 샘플 회원 데이터 삽입
 INSERT INTO "MEMBER"
 VALUES(SEQ_MEMBER_NO.NEXTVAL,
-			'member-1@kh.or.kr',
+			'member01@kh.or.kr',
 			'$2a$10$n/aPuZhv8UnjqVX06r3zRuUx3o1A23caMB4fKJlzx5L169x7P02cK',
 			'샘플1',
 			'01012341234',
@@ -75,5 +75,12 @@ DELETE
 FROM "MEMBER"
 WHERE "MEMBER_NO" = 2;
 
-UPDATE "MEMBER" SET MEMBER_EMAIL='member01@kh.or.kr'
-WHERE "MEMBER_NO" = 1;
+-- 이메일 중복 검사
+SELECT COUNT(*)
+FROM "MEMBER"
+WHERE MEMBER_DEL_FL = 'N'
+AND MEMBER_EMAIL = 'member01@kh.or.kr';
+
+
+-- 수정
+UPDATE "MEMBER" SET MEMBER_NICKNAME = '샘플2' WHERE MEMBER_NO =3;

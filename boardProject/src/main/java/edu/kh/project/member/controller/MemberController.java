@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -105,7 +107,7 @@ public class MemberController {
 			if(saveId !=null) {
 				cookie.setMaxAge(60*60*24*30); // 초 단위로 지정
 			}else { // 미 체크시
-				cookie.setMaxAge(0); // 0초
+				cookie.setMaxAge(0); // 0초 -> 이전 기록을 덮어써 쿠키를 삭제하기 위함
 			}
 			
 			// 응답객체에 쿠키 추가 -> 클라이언트로 전달
@@ -186,7 +188,31 @@ public class MemberController {
 		return "redirect:"+path;
 	}
 	
+
+	/** 이메일 중복 검사
+	 * @param memberEmail
+	 * @return 중복 1, 아니면 0
+	 */
+	@ResponseBody // 응답 본문(요청한 fetch())로 돌려보냄
+	@GetMapping("checkEmail")
+	public int checkEmail(
+			@RequestParam("memberEmail") String memberEmail
+			) {
+		return service.checkEmail(memberEmail);
+	}
 		
+	
+	/** 닉네임 중복 검사
+	 * @param memberNickname
+	 * @return count
+	 */
+	@ResponseBody
+	@GetMapping("checkNickname")
+	public int checkNickname(
+			@RequestParam("memberNickname") String memberNickname
+			) {
+		return service.checkNickname(memberNickname);
+	}
 	
 }// 끝
 
