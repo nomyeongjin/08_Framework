@@ -59,4 +59,9 @@
 		
 	</select>
 	
+	<select id="selectList" resultType="Member">
+		SELECT MEMBER_NO, MEMBER_EMAIL, MEMBER_NICKNAME, MEMBER_DEL_FL
+		FROM "MEMBER"
+	</select>
+	
 </mapper>

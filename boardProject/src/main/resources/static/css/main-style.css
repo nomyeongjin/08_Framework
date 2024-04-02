@@ -23,6 +23,12 @@ main{
     min-height: 500px;
 }
 
+/* 화면 넓이가 1140px이 되기 전에 적용할 css */
+/* == 1140px 이하일 때 적용 */
+@media (max-width:1140px){
+    main{width: 100%;}
+}
+
 
 a{
     text-decoration: none;
@@ -153,6 +159,7 @@ nav a:hover{
 .content-1{
     width: 70%;
     padding: 20px;
+    margin: 20px;
 }
 
 .content-2{
@@ -415,3 +422,4 @@ border-bottom: 1px solid #ccc;
 color: white;
 background-color: var(--main-color);
 }
+
