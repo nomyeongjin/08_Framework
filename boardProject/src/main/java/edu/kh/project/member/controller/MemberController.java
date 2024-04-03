@@ -241,8 +241,14 @@ public class MemberController {
 	public List<Member> selectList() {
 		List<Member> member = service.selectList(); 
 		
+		
+		// (java)List 
+		// -> (Spring)HttpMessageConverter가 JSON Array(문자열)로 변경
+		// -> (JS)response.json() -> [{}, {}, {}] JS 객체 배열
 		return member;
 	}
+	
+	
 	
 	
 	
