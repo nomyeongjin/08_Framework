@@ -84,6 +84,9 @@ AND MEMBER_EMAIL = 'member01@kh.or.kr';
 
 -- 수정
 UPDATE "MEMBER" SET MEMBER_NICKNAME = '샘플2' WHERE MEMBER_NO =3;
+UPDATE "MEMBER" SET MEMBER_DEL_FL='Y' WHERE MEMBER_NO =3;
+
+COMMIT;
 
 -- select
 SELECT MEMBER_NO, MEMBER_EMAIL, MEMBER_NICKNAME, MEMBER_DEL_FL
@@ -92,6 +95,8 @@ FROM "MEMBER";
 SELECT MEMBER_PW
 		FROM "MEMBER"
 		WHERE MEMBER_NO = 1;
+	
+/**************************************************************************/
 
 /* 이메일, 인증키 저장 테이블 생성 */
 CREATE TABLE "TB_AUTH_KEY"(
