@@ -32,6 +32,13 @@ public class FileConfig implements WebMvcConfigurer{
 	
 	@Value("${spring.servlet.multipart.location}")
 	private String location; // 임계값 초과 시 임시 저장 폴더 경로
+	
+	@Value("${my.profile.resource-handler}")
+	private String profileResourceHandler; //이미지 요청 주소
+
+	@Value("${my.profile.resource-location}")
+	private String profileResourceLocation;// 이미지 요청시 연결할 서버 폴더 경로
+	
 
 	
 	// 요청 주소에 따라 
@@ -42,6 +49,12 @@ public class FileConfig implements WebMvcConfigurer{
 		registry
 		.addResourceHandler("/myPage/file/**") // 클라이언트 요청 주소 패턴
 		.addResourceLocations("file:///C:\\uploadFiles\\test\\");
+		
+		registry
+		.addResourceHandler(profileResourceHandler) // /myPage/profile
+		.addResourceLocations(profileResourceLocation);
+		
+		
 		
 	}
 	

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+
+
+    <!-- 공용 css/js 추가 -->
+    <th:block th:replace="~{common/common}"></th:block>
+
+    <!-- myPage 전용 CSS -->
+    <link rel="stylesheet" href="/css/myPage/myPage-style.css">
+
+</head>
+<body>
+
+    <main>
+        <!-- 헤더 추가 -->
+        <th:block th:replace="~{common/header}"></th:block>
+
+        <section class="myPage-content">
+
+            <!-- 사이드메뉴 (왼쪽) 추가 -->
+            <th:block th:replace="~{myPage/sideMenu}"></th:block>
+
+            <!-- 마이페이지 본문(오른쪽) -->
+            <section class="myPage-main">
+                <h1 class="myPage-title">업로드한 파일 목록</h1>
+
+                <!-- table로 업로드한 파일 목록 출력 -->
+                <table border="1" style="border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>파일명</th>
+                            <th>업로드 회원</th>
+                            <th>업로드된 날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="file : ${list}" th:object="${file}">
+                            <td th:text="*{fileNo}">파일 번호</td>
+                            <td>
+                                <a th:href="|*{filePath}*{fileRename}|" th:text="*{fileOriginalName}" th:download="*{fileOriginalName}">파일명</a>
+                            </td>
+                            <td th:text="*{memberNickname}">업로드회원</td>
+                            <td th:text="*{fileUploadDate}">날짜</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+
+            </section>
+
+        </section>
+
+    </main>
+    
+    <!-- 푸터 추가 -->
+    <th:block th:replace="~{common/footer}"></th:block>
+
+    <script src="/js/myPage/myPage.js"></script>
+
+</body>
+</html>
+
+<!-- 
+
+    컨트롤러
+    - 현재 / 새비밀번호 파라미터
+    - 세션에서 회원 번호 얻어오기
+    (서비스 호출)
+
+    서비스
+    - bcrypt 암호화된 비밀번호를
+      DB에서 조회(회원 번호 필요)
+
+    - 현재 비밀번호 == bcrypt 암호화된 비밀번호 비교
+    (BcryptPassword.Encoder.matches(평문, 암호화된 비밀번호))
+
+    - 같을 경우
+    -> 새 비밀번호 암호화 진행
+
+     -> 새 비밀번호로 변경하는 Mapper 호출
+        (회원 번호, 새 비밀번호 -> 하나로 묶음(Member 또는 Map))
+    
+    - 다를 경우
+     -> 실패(0 반환)
+
+
+     
+
+     [컨트롤러로 돌아옴]
+     - 변경 성공 시 :alert(비밀번호가 변경되었습니다.) 
+     + /myPage/info로 리다이렉트
+
+     - 변경 실패 시
+     alert("현재 비밀번호가 일치하지 않습니다.")
+
+
+ -->

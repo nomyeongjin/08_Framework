@@ -118,9 +118,10 @@
 
                     <article class="login-area">
 
-                        <a href="#">
+                        <a href="/myPage/profile">
                             <!-- 프로필 이미지 -->
-                            <img th:src="#{user.default.image}" id="memberProfile" alt="프로필 이미지 없음">
+                            <img th:with="user=#{user.default.image}"
+                            th:src="${session.loginMember.profileImg ?: user }" id="memberProfile" alt="프로필 이미지 없음">
                         </a>
 
                         <!-- 닉네임, 이메일, 로그아웃 버튼 -->
