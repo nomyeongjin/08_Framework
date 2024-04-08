@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 검색, 수정, 삭제</title>
+</head>
+<body>
+
+    <h1>책 검색, 수정, 삭제</h1>
+
+    제목 : <input type="text" name="searchBar" id="searchBar" placeholder="책 제목을 검색해주세요."><button id="searchBtn">검색</button>
+
+    <table border="1" style="border-collapse: collapse;">
+        <thead>
+            <th>책 번호</th>
+            <th>제목</th>
+            <th>글쓴이</th>
+            <th>가격</th>
+            <th>등록일</th>
+            <th>수정버튼</th>
+            <th>삭제버튼</th>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+
+    </table>
+
+
+
+
+
+<script src="/js/update.js"></script>
+<script th:inline="javascript">
+    const message =  /*[[${message}]]*/ "전달 받은 message";
+    
+    if(message != null) alert(message);
+</script>
+</body>
+
+
+</html>

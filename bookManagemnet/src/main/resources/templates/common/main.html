@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 관리 프로그램</title>
+</head>
+<body>
+    <h1>책 관리 프로그램</h1>
+    <a href="insertBook">책 등록</a><br>
+    <a href="updateBook">책 검색, 수정, 삭제</a>
+
+    <hr>
+
+    <span style="font-weight: bold;">모든 책 조회</span> <button id="selectAllBtn">조회</button>
+   
+    <table border="1" style="border-collapse: collapse;">
+        <thead>
+            <th>책 번호</th>
+            <th>제목</th>
+            <th>글쓴이</th>
+            <th>가격</th>
+            <th>등록일</th>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+
+    </table>
+
+
+<script src="/js/main.js"></script>
+<script th:inline="javascript">
+    const message =  /*[[${message}]]*/ "전달 받은 message";
+  
+    if(message != null) alert(message);
+</script>
+    
+</body>
+</html>
