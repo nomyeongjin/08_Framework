@@ -1,6 +1,7 @@
 package com.nmj.book.main.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.nmj.book.main.model.dto.Book;
 
@@ -24,6 +25,18 @@ public interface MainService {
 	 * @return
 	 */
 	List<Book> search(String searchBar);
+
+	/** 업데이트
+	 * @param obj
+	 * @return
+	 */
+	int updateBook(Map<String, Object> obj);
+
+	/** 삭제
+	 * @param bookNo
+	 * @return
+	 */
+	int deleteBook(int bookNo);
 
 
 }

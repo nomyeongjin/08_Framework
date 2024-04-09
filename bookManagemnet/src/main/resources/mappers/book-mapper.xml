@@ -18,6 +18,18 @@
 	SELECT BOOK_NO,BOOK_TITLE ,BOOK_WRITER ,BOOK_PRICE,TO_CHAR(REG_DATE,'YYYY-MM-DD') REG_DATE
 	FROM "BOOK"
 	WHERE BOOK_TITLE LIKE '%'||#{searchBar}||'%' 
+	ORDER BY BOOK_NO
 </select>
+
+<update id="update">
+	UPDATE "BOOK" 
+	SET BOOK_PRICE = #{input} 
+	WHERE BOOK_NO=#{bookNo}
+</update>
+
+<delete id="delete">
+	DELETE FROM "BOOK"
+	WHERE BOOK_NO = #{bookNo}
+</delete>
 
 </mapper>

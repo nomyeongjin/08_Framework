@@ -38,5 +38,15 @@ public class MainServiceImpl implements MainService {
 	public List<Book> search(String searchBar) {
 		return mapper.search(searchBar);
 	}
+	
+	@Override
+	public int updateBook(Map<String, Object> obj) {
+		// TODO Auto-generated method stub
+		return mapper.update(obj);
+	}
+	@Override
+	public int deleteBook(int bookNo) {
+		return mapper.delete(bookNo);
+	}
 
 }

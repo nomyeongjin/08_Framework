@@ -2,10 +2,12 @@ package com.nmj.book.main.controller;
 
 import java.lang.reflect.Member;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -73,7 +75,8 @@ public class MainController {
 	}
 	
 	@GetMapping("updateBook")
-	public String updateBook() {
+	public String update() {
+		
 		return "common/updateBook";
 	}
 	
@@ -87,6 +90,26 @@ public class MainController {
 		return bookList;
 	}
 	
+	@ResponseBody
+	@PutMapping("update")
+	public int updateBook(
+			@RequestBody Map<String, Object> obj
+			) {
+		int result = service.updateBook(obj);
+		
+		return result;
+	}
+	
+	@ResponseBody
+	@PostMapping("delete")
+	public int deleteBook(
+			@RequestBody int bookNo
+			) {
+		int result = service.deleteBook(bookNo);
+		
+		return result;
+		
+	}
 	
 	
 }

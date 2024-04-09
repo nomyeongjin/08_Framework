@@ -16,4 +16,8 @@ public interface MainMapper {
 
 	public List<Book> search(String searchBar);
 
+	public int update(Map<String, Object> obj);
+
+	public int delete(int bookNo);
+
 }
