@@ -411,113 +411,206 @@ CHECK("COMMENT_DEL_FL" IN('Y','N'));
 ALTER TABLE SPRING_NMJ."COMMENT" RENAME COLUMN "COMMENT_NO2" TO "PARENT_COMMENT_NO";
 
 
+/* 게시판 종류(BOARD_TYPE) 추가 */
+CREATE SEQUENCE SEQ_BOARD_CODE NOCACHE;
+
+INSERT INTO "BOARD_TYPE" VALUES(SEQ_BOARD_CODE.NEXTVAL, '공지 게시판');
+INSERT INTO "BOARD_TYPE" VALUES(SEQ_BOARD_CODE.NEXTVAL, '정보 게시판');
+INSERT INTO "BOARD_TYPE" VALUES(SEQ_BOARD_CODE.NEXTVAL, '자유 게시판');
+
+SELECT * FROM BOARD_TYPE;
+
+COMMIT;
+-------------------------------------------------------
+-- 게시판 종류 조회 (표기법 변경)
+SELECT BOARD_CODE "boardCode", BOARD_NAME "boardName"
+FROM BOARD_TYPE
+ORDER BY BOARD_CODE
+;
+
+-------------------------------------------------------
+/* 게시글 번호 시퀀스 생성 */
+CREATE SEQUENCE SEQ_BOARD_NO NOCACHE;
+
+
+/* 게시판(BOARD) 테이블 샘플 데이터 삽입(PL/SQL)*/
+
+
+SELECT * FROM "MEMBER";
+
+-- DBMS_RANDOM.VALUE(0,3) : 0.0 이상, 3.0 미만의 난수
+-- CEIL( DBMS_RANDOM.VALUE(0,3) ) : 1,2,3 중 하나
+
+-- ALT + X 로 실행
+BEGIN
+	FOR I IN 1..2000 LOOP
+		
+		INSERT INTO "BOARD"
+		VALUES(SEQ_BOARD_NO.NEXTVAL,
+					 SEQ_BOARD_NO.CURRVAL || '번째 게시글',
+					 SEQ_BOARD_NO.CURRVAL || '번째 게시글 내용 입니다',
+					 DEFAULT, DEFAULT, DEFAULT, DEFAULT,
+					 CEIL( DBMS_RANDOM.VALUE(0,3) ),
+					 1
+		);
+		
+	END LOOP;
+END;
+
+COMMIT;
+
+-- 게시판 종류별 샘플 데이터 삽입 확인
+SELECT BOARD_CODE, COUNT(*)
+FROM "BOARD"
+GROUP BY BOARD_CODE
+ORDER BY BOARD_CODE;
+---------------------------------------------------
+-- 부모 댓글 번호 NULL 허용
+ALTER TABLE "COMMENT" 
+MODIFY PARENT_COMMENT_NO NUMBER NULL;
+
+
+/* 댓글 번호 시퀀스 생성 */
+CREATE SEQUENCE SEQ_COMMENT_NO NOCACHE;
+
+SELECT * FROM  member
+
+/* 댓글 ("COMMNET") 테이블에 샘플 데이터 추가*/
+
+BEGIN
+	FOR I IN 1..2000 LOOP
+	
+		INSERT INTO "COMMENT"	
+		VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			SEQ_COMMENT_NO.CURRVAL || '번째 댓글 입니다',
+			DEFAULT, DEFAULT,
+			CEIL( DBMS_RANDOM.VALUE(0, 2000) ),
+			1,
+			NULL
+		);
+	END LOOP;
+END;
+
+
+COMMIT;
+
+-- 게시글 번호 최소값, 최대값
+SELECT MIN(BOARD_NO), MAX(BOARD_NO) FROM "BOARD";
+
+-- 댓글 삽입 확인
+SELECT BOARD_NO, COUNT(*) 
+FROM "COMMENT"
+GROUP BY BOARD_NO
+ORDER BY BOARD_NO;
+---------------------------------------------------
+/* 특정 게시판(BOARD_CODE)에 
+ * 삭제되지 않은 게시글 목록 조회
+ * 
+ * 단, 최신글이 제일 위에 존재
+ * 몇 초/분/시간 전 또는 YYYY-MM-DD 형식으로 작성일 조회
+ * 
+ * + 댓글 개수
+ * + 좋아요 개수
+ * */
+
+-- 번호 / 제목[댓글 개수] / 작성자닉네임 / 작성일 / 조회수 / 좋아요 개수  
+
+
+-- 상관 서브 쿼리
+-- 1) 메인 쿼리 1행 조회
+-- 2) 1행 조회 결과를 이용해서 서브쿼리 수행
+--    (메인쿼리 모두 조회할 때 까지 반복)
+SELECT BOARD_NO, BOARD_TITLE, MEMBER_NICKNAME, READ_COUNT,
+	(SELECT COUNT(*) 
+	 FROM "COMMENT" C
+	 WHERE C.BOARD_NO = B.BOARD_NO) COMMENT_COUNT,
+	
+	(SELECT COUNT(*)
+	 FROM "BOARD_LIKE" L
+	 WHERE L.BOARD_NO = B.BOARD_NO) LIKE_COUNT,
+	 
+	 CASE
+		 WHEN SYSDATE - BOARD_WRITE_DATE < 1 / 24 / 60 
+		 THEN FLOOR((SYSDATE - BOARD_WRITE_DATE) * 24 * 60 * 60)  || '초 전'
+		 
+		 WHEN SYSDATE - BOARD_WRITE_DATE < 1 / 24 
+		 THEN FLOOR((SYSDATE - BOARD_WRITE_DATE)* 24 * 60) || '분 전'
+		 
+		 WHEN SYSDATE - BOARD_WRITE_DATE < 1
+		 THEN FLOOR((SYSDATE - BOARD_WRITE_DATE) * 24) || '시간 전'
+		 
+		 ELSE TO_CHAR(BOARD_WRITE_DATE, 'YYYY-MM-DD')
+	 	
+	 END BOARD_WRITE_DATE
+	
+FROM "BOARD" B
+JOIN "MEMBER" USING(MEMBER_NO)
+WHERE BOARD_DEL_FL = 'N'
+AND BOARD_CODE = 1
+ORDER BY BOARD_NO DESC
+;
+
+
+
+
+
+-- 특정 게시글의 댓글 개수 조회
+SELECT COUNT(*) FROM "COMMENT"
+WHERE BOARD_NO = 2000
+;
+
+
+-- 현재 시간 - 하루 전 --> 정수 부분 == 일 단위
+SELECT ( SYSDATE 
+	- TO_DATE('2024-04-10 12:14:30', 'YYYY-MM-DD HH24:MI:SS') )
+	* 60 * 60 * 24
+FROM DUAL;
+
+
+--지정된 게시판(boardCode)에서 삭제되지 않은 게시글 수를 조회
+SELECT COUNT(*)
+FROM "BOARD"
+WHERE BOARD_DEL_FL = 'N'
+AND BOARD_CODE = 3
+;
+
+
+
 
 
 
 --------------------------------------------------------------------------------------------------
 
-CREATE TABLE "BOOK" (
-	"BOOK_NO"	NUMBER		NOT NULL,
-	"BOOK_TITLE"	NVARCHAR2(50)		NOT NULL,
-	"BOOK_WRITER"	NVARCHAR2(20)		NOT NULL,
-	"BOOK_PRICE"	NUMBER		NOT NULL,
-	"REG_DATE"	DATE	DEFAULT SYSDATE	NOT NULL
+/* BOARD_IMG 테이블용 시퀀스 생성 */
+CREATE SEQUENCE SEQ_IMG NOCACHE;
+
+/* BOARD_IMG 테이블에 샘플 데이터 삽입*/
+INSERT INTO BOARD_IMG VALUES(
+	SEQ_IMG.NEXTVAL, '/images/board/','원본1.gif','test1.gif',0,1999
 );
-
-COMMENT ON COLUMN "BOOK"."BOOK_NO" IS '책 번호(PK)';
-
-COMMENT ON COLUMN "BOOK"."BOOK_TITLE" IS '책 제목';
-
-COMMENT ON COLUMN "BOOK"."BOOK_WRITER" IS '글쓴이';
-
-COMMENT ON COLUMN "BOOK"."BOOK_PRICE" IS '가격';
-
-COMMENT ON COLUMN "BOOK"."REG_DATE" IS '등록일';
-
-ALTER TABLE "BOOK" ADD CONSTRAINT "PK_BOOK" PRIMARY KEY (
-	"BOOK_NO"
+INSERT INTO BOARD_IMG VALUES(
+	SEQ_IMG.NEXTVAL, '/images/board/','원본2.gif','test2.gif',1,1999
+);
+INSERT INTO BOARD_IMG VALUES(
+	SEQ_IMG.NEXTVAL, '/images/board/','원본3.gif','test3.gif',2,1999
+);
+INSERT INTO BOARD_IMG VALUES(
+	SEQ_IMG.NEXTVAL, '/images/board/','원본4.gif','test4.gif',3,1999
+);
+INSERT INTO BOARD_IMG VALUES(
+	SEQ_IMG.NEXTVAL, '/images/board/','원본5.gif','test5.gif',4,1999
 );
 
 COMMIT;
 
+------------------------------------------------------------------
 
-SELECT * FROM "BOOK";
-
-CREATE SEQUENCE SEQ_BOOK_NO NOCACHE;
-
-INSERT INTO "BOOK" VALUES 
-	(SEQ_BOOK_NO.NEXTVAL,'셜록 홈즈','아서 코난 도일',20000,DEFAULT);
-INSERT INTO "BOOK" VALUES 
-	(SEQ_BOOK_NO.NEXTVAL,'DB구현','교육부',10000,DEFAULT);
-
-SELECT BOOK_NO,BOOK_TITLE ,BOOK_WRITER ,BOOK_PRICE,TO_CHAR(REG_DATE,'YYYY-MM-DD') REG_DATE
-FROM "BOOK" ORDER BY BOOK_NO ;
-
-DELETE FROM "BOOK" WHERE BOOK_TITLE='책';
-
-
-UPDATE "BOOK" 
-	SET BOOK_PRICE = 1234 
-	WHERE BOOK_NO=15;
-
------------------------------------------------------------------------------
--- TB_USER 테이블 생성 및 SEQ_UNO 시퀀스 생성
-
-CREATE TABLE TB_USER(
-
-USER_NO NUMBER PRIMARY KEY,
-
-USER_ID VARCHAR2(50) UNIQUE NOT NULL,
-
-USER_NAME VARCHAR2(50) NOT NULL,
-
-USER_AGE NUMBER NOT NULL
-
-);
-
-CREATE SEQUENCE SEQ_UNO;
-
--- 샘플 데이터 삽입
-
-INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'gd_hong', '홍길동', 20);
-
-INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'sh_han', '한소희', 28);
-
-INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'jm_park', '지민', 27);
-
-INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'jm123', '지민', 25);
-
-SELECT * FROM TB_USER;
-
-COMMIT;
-
-
-SELECT count(*)
-FROM TB_USER
-WHERE USER_ID = 'gd_hong';
-
-------------------------------------------------------------------------------
-
-
-CREATE TABLE CUSTOMER(
-
-CUSTOMER_NO NUMBER PRIMARY KEY,
-
-CUSTOMER_NAME VARCHAR2(60) NOT NULL,
-
-CUSTOMER_TEL VARCHAR2(30) NOT NULL,
-
-CUSTOMER_ADDRESS VARCHAR2(200) NOT NULL
-
-);
-
-CREATE SEQUENCE SEQ_CUSTOMER_NO NOCACHE;
-
-SELECT * FROM CUSTOMER;
-
-
-
-
-
-
+/* 게시글 상세 조회 */
+SELECT BOARD_NO , BOARD_TITLE ,BOARD_CONTENT, BOARD_CODE, READ_COUNT , 
+MEMBER_NO ,MEMBER_NICKNAME, PROFILE_IMG,
+TO_CHAR(BOARD_WRITE_DATE,'YYYY"년" MM"월" DD"일" HH24:MI:SS') BOARD_WRITE_DATE,
+TO_CHAR(BOARD_UPDATE_DATE,'YYYY"년" MM"월" DD"일" HH24:MI:SS') BOARD_UPDATE_DATE,
+FROM BOARD
+JOIN "MEMBER" USING(MEMBER_NO);
 
