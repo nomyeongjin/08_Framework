@@ -24,14 +24,14 @@
             <!-- 인터셉터 이용 방법 -->
 			<h1 class="board-name" th:text="${boardName}">게시판 이름</h1>
 
-            <th:block th:each="boardType:${application.boardTypeList}">
+            <!-- <th:block th:each="boardType:${application.boardTypeList}">
 
                 <h1 class="board-name"
                     th:if="${boardType.boardCode}==${boardCode}" th:text="${boardType.boardName}">
             
                 </h1>
 
-            </th:block>
+            </th:block> -->
 
 			<!-- 검색 구현 후 사용 -->
 			<!-- <h3 style="margin:30px">OOO 검색 결과</h3> -->
@@ -109,7 +109,7 @@
 
 			<div class="btn-area">
 				<!-- 로그인 상태일 때만 글쓰기 버튼 노출 -->
-				<button id="insertBtn">글쓰기</button>
+				<button id="insertBtn" th:if="${session.loginMember}">글쓰기</button>
 			</div>
 
 
@@ -172,6 +172,10 @@
 
 
 	<th:block th:replace="~{common/footer}"></th:block>
+
+	<script th:inline="javascript">
+		const boardCode = /*[[${boardCode}]]*/ "게시판 코드 번호";
+	</script>
 
 	<script src="/js/board/boardList.js"></script>
 
