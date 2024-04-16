@@ -11,3 +11,4 @@ if(insertBtn!=null){
         location.href=`/editBoard/${boardCode}/insert`;
     })
 }
+

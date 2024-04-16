@@ -137,3 +137,4 @@ document.querySelector("#boardWriteFrm").addEventListener("submit",e=>{
     }
 
 })
+

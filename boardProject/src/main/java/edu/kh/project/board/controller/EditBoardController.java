@@ -1,7 +1,9 @@
 package edu.kh.project.board.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -105,5 +108,43 @@ public class EditBoardController {
 		// 게시글 작성(INSERT) 성공 시 -> 작성된 글 상세 조회로 redirect
 		return "redirect:"+path;
 	}
+	
+	
+	@GetMapping("{boardCode:[0-9]+}/{boardNo:[0-9]+}/delete")
+	public String boardDelFl(
+			@SessionAttribute("loginMember")Member loginMember,
+			@PathVariable("boardCode") int boardCode,
+			@PathVariable("boardNo") int boardNo,
+			RedirectAttributes ra
+			
+			) {
+		int memberNo = loginMember.getMemberNo();
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("memberNo", memberNo);
+		map.put("boardCode", boardCode);
+		map.put("boardNo", boardNo);
+		
+		int result = service.boardDelFl(map);
+		
+		String path = null;
+		String message = null;
+		
+		if(result>0) {
+			path = "/board/1";
+			message="삭제 되었습니다.";
+		}else {
+			path = "/board/"+boardCode+"/"+boardNo;
+			message="삭제 실패.";
+		}
+		
+		ra.addFlashAttribute("message",message);
+		
+		return "redirect:"+path;
+		
+	}
+	
+	
+	
 	
 }

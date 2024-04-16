@@ -72,4 +72,12 @@
   	
   	
   	</insert>
+  	
+  	<!-- 게시글 삭제 -->
+  	<update id="boardDelFl">
+  	UPDATE "BOARD" SET BOARD_DEL_FL='Y'
+  	WHERE MEMBER_NO = #{memberNo}
+  	AND BOARD_CODE = #{boardCode}
+  	AND BOARD_NO = #{boardNo}
+  	</update>
 </mapper>

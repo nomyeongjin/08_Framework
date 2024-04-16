@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -130,6 +131,13 @@ public class EditBoardServiceImpl implements EditBoardService {
 
 		
 		return boardNo;
+	}
+	
+	
+	
+	@Override
+	public int boardDelFl(Map<String, Integer> map) {
+		return mapper.boardDelFl(map);
 	}
 	
 	

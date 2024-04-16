@@ -63,3 +63,39 @@ boardLike.addEventListener("click",e=>{
         e.target.nextElementSibling.innerText = count
     })
 })
+
+/* 
+[게시글 삭제]
+
+1. 삭제버튼 클릭시
+    "삭제하시겠습니까?"(확인/취소) 출력
+
+2. 취소 -> alert("취소됨")
+
+3. 확인 -> /editBoard/{boardCode}/{boardNo}/delete
+    GET 방식
+
+4. {boardCode} 게시판의 {boradNo}글의 BOARD_DEL_FL 값을 'Y'로 변경
+
+5. 변경 성공 시 -> 해당 게시판 목록 1page로 리다이렉트
+
+    실패 -> 원래 보고 있던 글 상세 조회 페이지로 리다이렉트
+
+*/
+
+
+const deleteBtn = document.querySelector("#deleteBtn")
+
+if(deleteBtn!=null){
+    deleteBtn.addEventListener("click",e=>{
+        if(confirm("삭제하시겠습니까?")){
+
+            
+            location.href=`/editBoard/${boardCode}/${boardNo}/delete`
+
+        }else{
+            alert("취소됨")
+        }
+
+    })
+}
