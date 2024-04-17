@@ -99,3 +99,20 @@ if(deleteBtn!=null){
 
     })
 }
+
+const updateBtn = document.querySelector("#updateBtn")
+
+if(updateBtn!=null){
+    updateBtn.addEventListener("click",e=>{
+
+        // /editBoard/1/2010/update?cp=1
+
+        // location.href=`/editBoard/${boardCode}/${boardNo}/update?cp=1`
+
+
+        // 현재 : /board/1/2010?cp=1 
+        // 목표 : /editBoard/1/2010/update?cp=1  (GET 방식)
+        location.href=location.pathname.replace("board","editBoard")+"/update"+location.search 
+                                                                            /* 쿼리 스트링 붙이기 -> ? 이후로 다 붙음 */
+    })
+}

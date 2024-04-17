@@ -1,20 +1,20 @@
 /* 선택된 이미지 미리보기 */
-
-/**
- * querySelector(), querySelectorAll()은
- * 호출되었을 시점의 요소 형태를 그대로 얻어옴
- * 
- * getElementsByClassName() 같은 경우에는
- * 요소를 얻어와 계속 추적 -> 실시간으로 변경/변경된 값 확인 가능
- */
-
-const previewList = document.getElementsByClassName("preview"); // img 태그 5개
 const inputImageList = document.getElementsByClassName("inputImage") // input x태그 5개
 const deleteImageList = document.getElementsByClassName("delete-image") // x버튼 5개
+
+
+// x버튼이 눌러져 삭제된 이미지의 순서를 저장
+// * Set : 중복 저장 X, 순서 유지 X
+const deleteOrder = new Set();
 
 // 이미지 선택 이후 취소를 누를 경우를 대비한 백업 이미지
 // (백업 원리 -> 복제품으로 기존 요소를 대체함)
 const backUpInputList = new Array(inputImageList.length);
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 /* *** input 태그 값 변경 시 (파일 선택 시) 실행할 함수 *** */
 /**
@@ -94,16 +94,13 @@ const changeImageFn = (inputImage,order)=>{
 
         // 같은 순서 backupInputList에 input태그를 복제해서 대입
         backUpInputList[order] = inputImage.cloneNode(true);
+
+        // 이미지가 성공적으로 읽어진 경우
+        // deleteOrder에서 해당 순거를 삭제
+        deleteOrder.delete(order);
     })
 
 }
-
-
-
-
-
-
-
 
 for(let i=0; i<inputImageList.length;i++){
 
@@ -117,31 +114,59 @@ for(let i=0; i<inputImageList.length;i++){
     /******* X버튼 클릭시 ******* */
 
     deleteImageList[i].addEventListener("click",()=>{
-        // img, input, backup의 인덱스가 모두 일치한다는 특징을 이용
+        // 삭제된 이미지 순서를 deleteOrder에 기록
 
+        // 미리보기 이미지가 있을 때에만
+        if(previewList[i].getAttribute("src") !=null && previewList[i].getAttribute("src") != ""){
+
+            // 기존에 이미지가 존재하고 있을 경우에만
+            if(orderList.includes(i)){
+                deleteOrder.add(i);
+            }
+        }
+        
+        // img, input, backup의 인덱스가 모두 일치한다는 특징을 이용
         previewList[i].src="";  // 미리보기 이미지 제거
         inputImageList[i].value=""; // input에 선택된 파일 제거
-        backUpInputList[i].value =""; // 백업본 제거
+        backUpInputList[i] =undefined; // 백업본 제거
+
+
+
     })
 
 }
 
-document.querySelector("#boardWriteFrm").addEventListener("submit",e=>{
+////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const boardTitle = document.querySelector("[name='boardTitle']")
-    const boardContent = document.querySelector("[name='boardContent']")
+const boardUpdateFrm = document.querySelector("#boardUpdateFrm")
 
-    if(boardTitle.value.trim().length==0){
-        alert("제목을 작성해주세요.")
-        boardTitle.focus();
-        e.preventDefault();
-        return;
+boardUpdateFrm.addEventListener("submit",e=>{
+
+    // 미작성시의 유효성 검사
+    const boardTitle = document.querySelector("[name='boardTitle']");
+    const boardContent = document.querySelector("[name='boardContent']");
+  
+    if(boardTitle.value.trim().length == 0){
+      alert("제목을 작성해 주세요");
+      boardTitle.focus();
+      e.preventDefault();
+      return;
     }
-    if(boardContent.value.trim().length==0){
-        alert("내용을 작성해주세요.")
-        boardContent.focus();
-        e.preventDefault();
+  
+    if(boardContent.value.trim().length == 0){
+      alert("내용을 작성해 주세요");
+      boardContent.focus();
+      e.preventDefault();
+      return;
     }
+  
+    // input 태그에 삭제할 이미지 순서(Set)를 배열로 만든 후 대입
+    // -> value(문자열) 저장 시 배열은 toString()호출되서 양쪽 []가 사라짐
+    document.querySelector("[name='deleteOrder']").value
+    = Array.from(deleteOrder);
+    
+    document.querySelector("[name='querystring']").value
+    = location.search;
+  
 
 })
-
