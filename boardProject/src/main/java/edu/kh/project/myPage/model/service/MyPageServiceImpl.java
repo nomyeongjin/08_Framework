@@ -246,7 +246,6 @@ public class MyPageServiceImpl implements MyPageService{
 		return result1+result2;
 	}	
 	
-	
 	// 프로필 이미지 변경
 	@Override
 	public int profile(MultipartFile profileImg, Member loginMember) throws IllegalStateException, IOException {
