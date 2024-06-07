@@ -285,3 +285,8 @@
 	background-color: black;
 	color: white;
 }
+
+.recent-message-box{
+	display: flex;
+    justify-content: space-between;
+}
